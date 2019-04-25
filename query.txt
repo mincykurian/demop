@@ -1,0 +1,7 @@
+SELECT * FROM students s left join student_attendance sa on sa.user_id=s.user_id where sa.user_id is null
+
+EXPLAIN SELECT * FROM students s WHERE s.user_id not in (select user_id from student_attendance )
+
+EXPLAIN SELECT (select count(user_id) from student_attendance where user_id=2) as ta, (select count(course_id) FROM student_attendance sa join students s on s.course_id=sa.course_id where s.user_id=2) as status
+
+SELECT sa.user_id,sa.attendance_date,u.name FROM `student_attendance` sa join users u on u.id=sa.record_updated_by where attendance_date BETWEEN '2018-06-01 00:00:00' and '2019-03-31 00:00:00' and sa.user_id=1 

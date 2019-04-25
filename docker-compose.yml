@@ -1,0 +1,62 @@
+version: '3.5'
+networks:
+  wesa_net:
+services:
+  wesa:
+    build:
+      context: .
+    depends_on:
+      - wesa-db
+    networks:
+      - wesa_net
+    ports:
+      - 3000:3000
+    command: ["db-migrate","up","--config","database.json"]
+    command: ["npm","start"]
+    environment:
+      - DB_HOST=wesa-db
+      - DB_USER=wesa
+      - DB_PASSWORD=wesa
+      - DB_NAME=wesa
+      - PORT=3000
+      - SMS_AUTH_KEY=adv
+      - FCM_CONFIG=.
+      - PRIVATE_KEY=./private.key
+      - PUBLIC_KEY=./public.key 
+  wesa-db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: wesa
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: wesa
+      # You can use whatever password you like
+      MYSQL_PASSWORD: wesa
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: wesa
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - 3306:3306
+    networks:
+      - wesa_net
+    # expose:
+    #   # Opens port 3306 on the container
+    #   - 3306
+    #   # Where our data will be persisted
+    volumes:
+      - wesa-data:/var/lib/mysql
+      - ./migrations/:/docker-entrypoint-initdb.d/
+  wesa-phpadmin:
+    image: phpmyadmin/phpmyadmin
+    links: 
+      - wesa-db:wesa-db
+    ports:
+      - 8181:80
+    networks:
+      - wesa_net
+    environment:
+      MYSQL_USERNAME: wesa
+      MYSQL_ROOT_PASSWORD: wesa
+# Names our volume
+volumes:
+  wesa-data:

@@ -1,0 +1,314 @@
+REST API Endpoints Mobile App Side
+
+Module 1
+----------------------------------------------------------------------------------------------------------------------------
+
+
+ 1: To get all associated users of a registered mobile number
+
+    GET  /wesa/api/v1/users/:mobileNumber/all
+
+    Response On Success
+        [{
+         "status": true,
+         "code": 200,
+         "message": "All users",
+        {
+            "status": true,
+            "code": 200,
+            "message": "All users",
+            "result": [
+                {
+                    "name": "sandeep",
+                    "user_id": 1,
+                    "roles": [
+                        {
+                            "id": 5
+                        }
+                    ],
+                    "image": null,
+                    "course_id": 1,
+                    "class": "10A",
+                    "active": 1,
+                    "subscriptions": []
+                },
+                {
+                    "name": "Anto",
+                    "user_id": 2,
+                    "roles": [
+                        {
+                            "id": 5
+                        }
+                    ],
+                    "image": null,
+                    "course_id": 2,
+                    "class": "10B",
+                    "active": 1,
+                    "subscriptions": []
+                },
+                {
+                    "name": "Britto",
+                    "user_id": 4,
+                    "roles": [
+                        {
+                            "id": 3
+                        }
+                    ],
+                    "image": null,
+                    "course_id": 1,
+                    "class": "10A",
+                    "active": 1,
+                    "subscriptions": []
+                }
+            ]
+        }
+         Response On Failed
+            {
+                "status": false,
+                "code": 204,
+                "message": "No user found this mobile number",
+                "result": []
+            }
+ -----------------------------------------------------------------------------------------------------------------------
+ USER AUTHENTICATION
+
+ 2: send otp code to registered mobile number
+            GET wesa/api/v1/users/phone/:mobileNumber/otp/send
+
+            Response on success: {
+                                     "status": true,
+                                     "code": 200,
+                                     "message": "An otp sent to your number",
+                                     "sessionId": 1552804374330
+                                 }
+            Response on failure: {
+                                     "status": false,
+                                     "code": 200,
+                                     "message": "Mobilenumber is not registerd.",
+                                     "result": []
+                                 }
+
+  3: To verify otp
+
+            POST /wesa/api/v1/users/phone/verify
+
+             Body   {
+                 	"sessionId":"1552804374330",
+                 	"otp":"803979"
+                    }
+             On success
+                     {
+                 "status": true,
+                 "code": 200,
+                 "message": "JWT Token",
+                 "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjpbeyJ1c2VySWQiOjEsIm5hbWUiOiJzYW5kZWVwIiwicm9sZUlkIjo1LCJhZG1pbiI6ZmFsc2V9LHsidXNlcklkIjoyLCJuYW1lIjoic2hpbmN5Iiwicm9sZUlkIjo1LCJhZG1pbiI6ZmFsc2V9LHsidXNlcklkIjo0LCJuYW1lIjoibWluY3kiLCJyb2xlSWQiOjMsImFkbWluIjpmYWxzZX1dLCJpYXQiOjE1NTI4MDQ2ODIsImV4cCI6MTU1Mjg0Nzg4MiwiYXVkIjoiaHR0cDovL2hmY2docy5qcG5tZS5jb20iLCJpc3MiOiJqcE5tZSIsInN1YiI6InNvbWV1c2VyQHVzZXIuY29tIn0.UNi1U5xvdt21ngomRzyIZyw922Q1Mw-Jl5j_yKV7Kfgv0mR9UczjEfFjWLJEuDWKuIosjbYGd1l_WG48RMwi7g"
+                     }
+             On error
+                    {
+                        "status": false,
+                        "code": 200,
+                        "message": "Invalid OTP"
+                    }
+
+ ------------------------------------------------------------------------------------------------------------------------
+
+ 2: To get All courses of a requested school
+    GET /wesa/:schoolCode/api/v1/school/courses
+
+    Response On Success
+        {
+            "status": true,
+            "code": 200,
+            "message": "Available courses",
+            "result": [
+                {
+                    "id": 1,
+                    "course_title": "10A"
+                },
+                {
+                    "id": 2,
+                    "course_title": "10B"
+                }
+            ]
+        }
+         Response On Failed http code 400 Bad request if the school code is incorrect
+            {
+              error:Bad request
+            }
+
+
+3: To get All menus of schools wrt to role
+
+    GET /wesa/:schoolCode/api/v1/school/menus
+    Response On Success
+           {
+               "status": true,
+               "code": 200,
+               "message": "Menu items are",
+               "result": [
+                   {
+                       "id": 2,
+                       "name": "Home",
+                       "component": "HomePage",
+                       "icon": "pin",
+                       "badge": 0
+                   },
+                   {
+                       "id": 5,
+                       "name": "Usercontroller's Guide",
+                       "component": "NotificationsPage",
+                       "icon": null,
+                       "badge": 0
+                   }
+               ]
+           }
+             Response On Failed http code 400 Bad request if the school code is incorrect
+                {
+                  error:Bad request
+                }
+
+4: To get all the students of a school
+
+        GET /wesa/:schoolCode/api/v1/school/students
+
+        Response On Success
+                   {
+                       "status": true,
+                       "code": 200,
+                       "message": "Students List",
+                       "result": [
+                           {
+                               "admission_no": "1001",
+                               "roll_no": "1",
+                                ....
+                           },
+                           {
+                               "admission_no": "1002",
+                               "roll_no": "2",
+                                ...
+                           }
+                       ]
+                   }
+                     Response On Failed http code 400 Bad request if the school code is incorrect
+                        {
+                          error:Bad request
+                        }
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+5: To get a student profile
+
+                    GET   /wesa/:schoolCode/api/v1/student/:id
+
+                    {
+                        "status": true,
+                        "code": 200,
+                        "message": "Student details",
+                        "result": {
+                            "admission_no": "1001",
+                            "roll_no": "1",
+                            ...
+                        }
+                    }
+
+6:  To update student profile
+
+                PUT     /wesa/:schoolCode/api/v1/student/1
+                body:   {
+                        	"image":"test.png"
+                        	 ...
+                        }
+                 Response on success
+                        {
+                            "status": true,
+                            "code": 200,
+                            "message": "Student details updated",
+                            "result": {
+                                "fieldCount": 0,
+                                 ....
+                            }
+                        }
+                  Response on failure
+                        {
+                            "status": false,
+                            "code": 200,
+                            "message": "No student found"
+                        }
+
+7: To add student Medical details
+
+                POST  /wesa/:schoolCode/api/v1/student/medical
+                Body {
+                     	"user_id":2,
+                     	"blood_group":"A+"
+                     }
+                Response on success HTTP CODE 201
+                {
+                    "status": true,
+                    "code": 201,
+                    "message": "Student medical details inserted",
+                    "result": {
+                        "fieldCount": 0,
+                    }
+                }
+                Response on error HTTP CODE 500
+                {
+                    "status": true,
+                    "code": 500,
+                    "message": "Internal Server error",
+                    "result": "Student details is not present"
+                }
+
+8: To Update student medical info
+
+                 PUT /wesa/:schoolCode/api/v1/student/:id/medical
+                                Body {
+                                        ...
+                                     	"blood_group":"A+"
+                                     }
+                                Response on success HTTP CODE 200
+                              {
+                                  "status": true,
+                                  "code": 200,
+                                  "message": "Updated",
+                                  "result": {
+                                      "fieldCount": 0,
+                                        ...
+                                  }
+                              }
+                              response on no data changed
+                              {
+                                  "status": true,
+                                  "code": 200,
+                                  "message": "Nothing to update",
+                                  "result": {
+                                      "fieldCount": 0,
+                                        ...
+                                  }
+                              }
+                                Response on no student found HTTP CODE 200
+                               {
+                                   "status": false,
+                                   "code": 200,
+                                   "message": "No student found"
+                               }
+
+9: To delete student medical info
+                   DELETE /wesa/:schoolCode/api/v1/student/:userId/medical
+
+                   Response on success HTTP CODE 200
+                            {
+                                "status": true,
+                                "code": 200,
+                                "message": "deleted"
+                            }
+                    Response on failure
+                           {
+                               "status": true,
+                               "code": 200,
+                               "message": "No records exists.."
+                           }
+
+------------------------------------------------------------------------------------------------------------------------------
+
+

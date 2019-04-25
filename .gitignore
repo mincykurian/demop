@@ -1,0 +1,7 @@
+.env
+node_modules/
+private.key
+public.key
+new-wesa-firebase-adminsdk-zaqqp-33ce8272de.json
+.idea
+.vscode
